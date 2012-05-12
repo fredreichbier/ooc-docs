@@ -1,9 +1,19 @@
 Test
 ====
 
+.. module:: lang/string
+
+.. class:: String
+
+    Heya!
+
+.. module:: nark/fu
+
 Hey, an *ooc* function:
 
-.. ooc:function:: fubar(yessss: String)
+.. function:: fubar(yessss: :class:`~lang/string String`)
 
     Yeah, this is documentation, baby!
 
+
+Also, a reference to it: :func:`nark fubar`.

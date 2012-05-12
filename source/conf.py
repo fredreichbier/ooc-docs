@@ -30,6 +30,9 @@ extensions = ['sphinx_ooc']
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
+# We do ooc!
+primary_domain = 'ooc'
+
 # The suffix of source filenames.
 source_suffix = '.rst'
 
