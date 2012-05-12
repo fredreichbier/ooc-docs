@@ -32,6 +32,7 @@ templates_path = ['_templates']
 
 # We do ooc!
 primary_domain = 'ooc'
+highlight_language = 'ooc'
 
 # The suffix of source filenames.
 source_suffix = '.rst'

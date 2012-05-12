@@ -53,8 +53,11 @@ class OOCObject(ObjectDescription):
         """
             Parse and create a parameter list. With crossrefs even!
         """
+        # TODO: do a real parser that handles nested function types with argument lists
+        # e.g. `f: func (b: Func (a, b, c) -> d)`
         stack = [parameternode]
         token_before = None
+        openparens = 0
         for token in ooc_paramlist_re.split(arglist):
             if token == ',':
                 # skip lonely commas. we don't want them. :(
@@ -67,17 +70,27 @@ class OOCObject(ObjectDescription):
                 else:
                     token = token_before + token
                     token_before = None
+            openparens += token.count('(')
+            openparens -= token.count(')')
             if token.count('<') != (token.count('>') - token.count('->')):
                 # splitted in the middle of a <A, B, C> declaration :(
                 token_before = token
+                continue
+            if openparens > 0:
+                # we still have some open parens! we need to join the next token
+                token_before = token + ', ' # TODO: I guess?
+                # but reset the counter
+                openparens -= token.count('(')
+                openparens += token.count(')')
+                continue
             elif not token or token == ',' or token.isspace():
-                pass
+                continue
             else:
                 token = token.strip()
             if ':' in token:
                 # We have a type and we can link it.
-                if 'Func' in token:
-                    print repr(token)
+                if '->:' in token:
+                    token = token.replace('->:', '-> :') # TODO: wow, how nasty
                 stack[-1] += addnodes.desc_parameter('', '', *self._resolve_typeref(token))
             else:
                 stack[-1] += addnodes.desc_parameter(token, token)
